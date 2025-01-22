@@ -15,8 +15,15 @@ def emotion_detector(text_to_analyze):
         # Raise an error if the response is unsuccessful. status code 200 if success
         response.raise_for_status()
         
-        # Return the JSON response
-        return response.json()
-    
+        # Parse the JSON response
+        data = response.json()
+
+        # Extract the "emotion" field from the response
+        emotions = data["emotionPredictions"][0]["emotion"]
+        
+        # Return only the relevant emotions and their scores
+        return emotions
+
     except requests.exceptions.RequestException as e:
+        # Return an error message if something goes wrong
         return f"An error occurred: {e}"
