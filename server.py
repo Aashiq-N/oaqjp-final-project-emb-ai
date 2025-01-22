@@ -1,3 +1,7 @@
+"""
+Flask application for Emotion Detection
+"""
+
 from flask import Flask, request, jsonify, render_template
 from EmotionDetection import emotion_detector
 
@@ -6,11 +10,26 @@ app = Flask(__name__)
 # Route to serve the HTML interface
 @app.route('/')
 def home():
+    """
+    Serve the HTML interface for the application.
+    Returns:
+        Rendered HTML page (index.html).
+    """
     return render_template('index.html')
 
 # Route to handle emotion detection
 @app.route('/emotionDetector', methods=['GET'])
 def detect_emotion():
+    """
+    Handle the emotion detection for the given input text.
+
+    Query Parameters:
+        textToAnalyze (str): Input text to analyze.
+
+    Returns:
+        JSON response with emotion scores and dominant emotion, or an error
+        message for invalid input.
+    """
     # Get the input text from the query parameter
     input_text = request.args.get('textToAnalyze', '')
 
@@ -29,10 +48,16 @@ def detect_emotion():
 
     # Format the response
     response = {
-        "message": f"For the given statement, the system response is 'anger': {result['anger']}, 'disgust': {result['disgust']}, 'fear': {result['fear']}, 'joy': {result['joy']}, 'sadness': {result['sadness']}. The dominant emotion is {result['dominant_emotion']}."
+        "message": (
+            f"For the given statement, the system response is 'anger': {result['anger']}, "
+            f"'disgust': {result['disgust']}, 'fear': {result['fear']}, "
+            f"'joy': {result['joy']}, 'sadness': {result['sadness']}. "
+            f"The dominant emotion is {result['dominant_emotion']}."
+        )
     }
     print(response["message"])  # Output valid responses to the terminal
     return jsonify(response)
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
